@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Prediction Game</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #1a1a2e;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #e94560;
+        }
+        .main-area {
+            display: flex;
+            gap: 20px;
+        }
+        .left {
+            flex: 2;
+        }
+        .right {
+            flex: 1;
+        }
+        .history {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 150px;
+        }
+        .history-item {
+            padding: 8px;
+            border-bottom: 1px solid #0f3460;
+            display: flex;
+            justify-content: space-between;
+        }
+        .guess { color: #e94560; font-weight: bold; }
+        .result { color: #4ecca3; }
+        .input-area {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        input {
+            padding: 10px;
+            font-size: 22px;
+            width: 120px;
+            text-align: center;
+            border-radius: 5px;
+            border: 2px solid #e94560;
+            background: #1a1a2e;
+            color: white;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 18px;
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        button:hover { background: #c73652; }
+        .message {
+            font-size: 20px;
+            margin-top: 15px;
+            color: #4ecca3;
+        }
+        .score {
+            text-align: center;
+            font-size: 16px;
+            color: #a8a8b3;
+            margin-top: 10px;
+        }
+        .rules {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .rules h3 {
+            color: #e94560;
+            margin-top: 0;
+        }
+        .rules ul {
+            padding-left: 18px;
+            line-height: 2;
+            color: #a8a8b3;
+        }
+        .rules ul li {
+            margin-bottom: 8px;
+        }
+        .example {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #4ecca3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Number Prediction Game</h1>
+
+        <div class="main-area">
+
+            <!-- LEFT SIDE -->
+            <div class="left">
+
+                <!-- History -->
+                <div class="history">
+                    <h3>📋 Your Guesses:</h3>
+                    {% if history %}
+                        {% for item in history %}
+                        <div class="history-item">
+                            <span class="guess">{{ item.guess }}</span>
+                            <span class="result">
+                                {{ item.correct_digits }} digits correct,
+                                {{ item.correct_position }} in right position
+                            </span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #a8a8b3;">No guesses yet — start playing!</p>
+                    {% endif %}
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    {% if won %}
+                        <p class="message">🎉 You Won! Start a new game?</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="new_game" value="true">
+                            <button type="submit">🔄 New Game</button>
+                        </form>
+                    {% else %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="number" name="guess" placeholder="1234"
+                                   min="1000" max="9999" required autofocus/>
+                            <button type="submit">Guess! 🎯</button>
+                        </form>
+                        <p class="message">{{ message }}</p>
+                        <p class="score">Attempts: {{ score }}</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE - RULES -->
+            <div class="right">
+                <div class="rules">
+                    <h3>📖 How to Play</h3>
+                    <ul>
+                        <li>Guess a <strong>4 digit</strong> secret number</li>
+                        <li>No <strong>repeating</strong> digits allowed</li>
+                        <li>No <strong>zeros</strong> allowed</li>
+                        <li>Use digits <strong>1 to 9</strong> only</li>
+                        <li>After each guess you'll get hints</li>
+                        <li>Try to guess in <strong>fewest attempts!</strong></li>
+                    </ul>
+
+                    <div class="example">
+                        <strong>💡 Example:</strong><br><br>
+                        Secret number: 1379<br><br>
+                        You guess: 1234<br>
+                        → 2 digits correct, 1 in right position<br><br>
+                        You guess: 1359<br>
+                        → 3 digits correct, 2 in right position<br><br>
+                        Use the hints to crack the code! 🔍
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
