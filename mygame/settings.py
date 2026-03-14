@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-2v0o)xbe0%moy@ug6-v4tuwd0*s7o)u-r9^81yq$9yrihws2#(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'predict4-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://predict4-production.up.railway.app']
 
 
 # Application definition
