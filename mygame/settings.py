@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*', 'predict4-production.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://predict4-production.up.railway.app']
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
